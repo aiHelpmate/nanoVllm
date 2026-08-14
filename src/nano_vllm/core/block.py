@@ -13,7 +13,7 @@ from typing import List, Optional, Tuple
 BLOCK_SIZE = 16
 
 
-def hash_token_block(token_ids: Tuple[int, ...], parent_hash: Optional[int] = None) -> int:
+def compute_block_hash(token_ids: Tuple[int, ...], parent_hash: Optional[int] = None) -> int:
     """Compute a cumulative hash for a block of tokens including its prefix chain.
 
     Used for prefix caching to identify shared prefixes. The hash includes the
@@ -58,7 +58,7 @@ class Block:
     # Reference count: how many sequences currently point at this physical
     # block. When it drops to zero the block can be returned to the free pool.
     ref_count: int = 1
-    # Cumulative hash of this block's tokens (see hash_token_block). Stored on
+    # Cumulative hash of this block's tokens (see compute_block_hash). Stored on
     # the block so the BlockManager can look up shared prefixes without
     # re-hashing tokens on every scheduling step.
     prefix_hash: Optional[int] = None
@@ -138,15 +138,10 @@ class BlockTable:
         """
         self.block_ids.append(block_id)
 
+    @property
     def num_blocks(self) -> int:
         """Number of blocks allocated to this sequence."""
         return len(self.block_ids)
-
-    def get_physical_block_ids(self) -> List[int]:
-        """Get all physical block IDs for this sequence."""
-        # Defensive copy: callers may reorder the table without corrupting the
-        # sequence's own view of its allocation.
-        return self.block_ids.copy()
 
     def get_slot_mapping(self, seq_len: int) -> List[int]:
         """Get physical slot indices for all tokens in the sequence.

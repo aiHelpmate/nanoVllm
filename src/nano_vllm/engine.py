@@ -367,7 +367,7 @@ class LLMEngine:
             seq.block_table = self.block_manager.allocate_blocks_for_sequence(blocks_needed)
         else:
             # Allocate additional blocks if needed
-            current_blocks = seq.block_table.num_blocks()
+            current_blocks = seq.block_table.num_blocks
             new_blocks_needed = blocks_needed - current_blocks
             for _ in range(new_blocks_needed):
                 block_id = self.block_manager.allocate_block()

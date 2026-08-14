@@ -186,7 +186,7 @@ def flash_attention_with_kv_cache(
     return output, key_cache, value_cache
 
 
-def standard_attention(
+def sdpa_attention(
     query: torch.Tensor,
     key: torch.Tensor,
     value: torch.Tensor,
@@ -194,7 +194,7 @@ def standard_attention(
     num_kv_groups: int = 1,
     is_causal: bool = False,
 ) -> torch.Tensor:
-    """Standard scaled dot-product attention using PyTorch's optimized SDPA.
+    """Scaled dot-product attention via PyTorch's optimized SDPA.
 
     This uses torch.nn.functional.scaled_dot_product_attention which automatically
     selects the best backend:
@@ -283,7 +283,7 @@ def attention(
         return flash_attention(query, key, value, causal=causal and query_len == kv_len)
 
     # Fall back to PyTorch SDPA (still uses optimized backends).
-    return standard_attention(query, key, value, attention_mask, num_kv_groups, is_causal=use_is_causal)
+    return sdpa_attention(query, key, value, attention_mask, num_kv_groups, is_causal=use_is_causal)
 
 
 def print_flash_attn_info():

@@ -169,7 +169,7 @@ class Sequence:
             Number of additional blocks needed (0 if none)
         """
         blocks_needed = self.get_num_blocks_needed(block_size)
-        blocks_allocated = self.block_table.num_blocks() if self.block_table else 0
+        blocks_allocated = self.block_table.num_blocks if self.block_table else 0
         return max(0, blocks_needed - blocks_allocated)
 
     def __repr__(self) -> str:

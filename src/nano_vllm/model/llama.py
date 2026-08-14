@@ -320,16 +320,6 @@ class LlamaAttention(nn.Module):
 
         return gathered_keys, gathered_values
 
-    def _repeat_kv(self, hidden_states: torch.Tensor) -> torch.Tensor:
-        """Repeat KV heads to match the number of query heads for GQA."""
-        if self.num_kv_groups == 1:
-            return hidden_states
-        batch, num_kv_heads, seq_len, head_dim = hidden_states.shape
-        hidden_states = hidden_states[:, :, None, :, :].expand(
-            batch, num_kv_heads, self.num_kv_groups, seq_len, head_dim
-        )
-        return hidden_states.reshape(batch, num_kv_heads * self.num_kv_groups, seq_len, head_dim)
-
 
 class LlamaMLP(nn.Module):
     """SwiGLU Feed-Forward Network.

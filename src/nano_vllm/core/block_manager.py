@@ -10,8 +10,8 @@ from nano_vllm.core.block import (
     Block,
     BlockTable,
     BLOCK_SIZE,
+    compute_block_hash,
     compute_num_blocks,
-    hash_token_block,
 )
 
 
@@ -207,7 +207,7 @@ class BlockManager:
 
                 # Set block hash (CUMULATIVE - includes parent chain) and mark as full
                 # This ensures the hash uniquely identifies the entire prefix, not just this block
-                block.prefix_hash = hash_token_block(block_tokens, parent_hash)
+                block.prefix_hash = compute_block_hash(block_tokens, parent_hash)
                 block.is_full = True
 
                 # Add to cache and reverse mapping
@@ -256,7 +256,7 @@ class BlockManager:
         block = self.blocks[block_id]
         block_tokens = tuple(token_ids)
         # Compute CUMULATIVE hash including parent chain
-        block.prefix_hash = hash_token_block(block_tokens, parent_hash)
+        block.prefix_hash = compute_block_hash(block_tokens, parent_hash)
         block.is_full = True
 
         # Add to cache and reverse mapping
