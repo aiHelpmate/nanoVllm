@@ -5,8 +5,6 @@
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Version](https://img.shields.io/badge/version-0.1.0-lightgrey)
 
-A minimalistic, from-scratch LLM inference engine featuring continuous batching, PagedAttention, priority scheduling, and chunked prefill — built for learning how modern inference servers (vLLM-style) work under the hood.
-
 ## Overview
 
 nanoVllm implements the complete inference stack for Llama-family models in pure PyTorch: model architecture, KV cache management, scheduling, and sampling are all written from first principles with no dependency on the HuggingFace modeling code (weights and tokenizers are loaded from HF, but the forward pass is entirely our own).
